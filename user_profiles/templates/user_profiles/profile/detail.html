@@ -1,0 +1,13 @@
+{% extends "html/base.html" %}
+
+{% block title %}
+{{ block.super }}
+{{ user.username }}
+{% endblock %}
+
+{% block heading %}{{ user.username }}{% endblock %}
+
+{% block content %}
+[This is a user profile page.]
+{% endblock %}
+

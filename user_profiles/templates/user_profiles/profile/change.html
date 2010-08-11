@@ -1,0 +1,16 @@
+{% extends "html/base.html" %}
+{% load i18n %}
+
+{% block title %}
+{{ block.super }}
+{{ request.user.username }} – edit profile
+{% endblock %}
+
+{% block content %}
+<form method="POST" action="">
+	{{ form.as_p }} 
+	{% csrf_token %}
+	<input type="submit" value="{% trans "Save" %}" />
+</form>
+{% endblock %}
+
