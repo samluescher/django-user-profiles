@@ -1,35 +1,40 @@
 from user_profiles.utils import get_user_profile_model
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
 from django import forms
 
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = get_user_profile_model()
 
-class SignupForm(forms.Form):
-    username = forms.CharField(label=_('username'), required=True, max_length=30)
-    password = forms.CharField(label=_('Password'), required=True, max_length=128, widget=forms.widgets.PasswordInput)
-    password_confirm = forms.CharField(label=_('Password confirmation'), help_text=_('Please enter your password again to verify you typed it in correctly.'), required=True, widget=forms.widgets.PasswordInput)
+class SignupForm(UserCreationForm):
+    
+    def save(self, commit=True):
+        from user_profiles import settings as app_settings
+        user = super(SignupForm, self).save(commit=False)
+        user.is_active = app_settings.USER_IS_ACTIVE_ON_SIGNUP
+        user.save()
+        return user
+
+class EmailAsUsernameSignupForm(SignupForm):
+    email = forms.EmailField(required=True, max_length=30, label=_('E-mail address'), help_text=_('Your e-mail address is your username. You need to provide a valid address in order to use your account.'))
 
     class Meta:
         model = User
-    
-    def clean_username(self):
-        existing_user = User.objects.filter(username=self.cleaned_data['username'])
-        if existing_user.exists():
-            raise forms.ValidationError(_('This username is already taken.'))
-        return self.cleaned_data['username']
+        fields = ("email",)
 
-    def clean_password_confirm(self):
-        if 'password' in self.cleaned_data and self.cleaned_data['password'] != self.cleaned_data['password_confirm']:
-            raise forms.ValidationError(_('Password confirmation does not match password.'))
-        return self.cleaned_data['password_confirm']
-        
+    def __init__(self, *args, **kwargs):
+        super(EmailAsUsernameSignupForm, self).__init__(*args, **kwargs)
+        del(self.fields['username'])
+
+    def clean_email(self):
+        if User.objects.filter(email=self.cleaned_data['email']).exists():
+            raise forms.ValidationError('A user with this e-mail address already exists.')
+        return self.cleaned_data['email']
+
     def save(self, commit=True):
-        new_user = User(username=self.cleaned_data['username'], 
-            email=self.cleaned_data.get('email', ''))
-        new_user.set_password(self.cleaned_data.get('password', ''))
-        if commit:
-            new_user.save()
-        return new_user
+        user = super(EmailAsUsernameSignupForm, self).save(commit=False)
+        user.username = user.email
+        user.save()
+        return user

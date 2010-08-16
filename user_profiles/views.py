@@ -26,14 +26,19 @@ def signup(request):
         if signup_form.is_valid():
             new_user = signup_form.save()
             user_profile_form = PROFILE_FORM_CLASS(request.POST, instance=new_user.get_profile())
-            try:
+            if user_profile_form.is_valid():
                 user_profile_form.save()
-                messages.success(request, _('Signup was successful. You can now log in.'))
+                if new_user.is_active:
+                    messages.success(request, _('Signup was successful. You can now proceed to log in.'))
+                else:
+                    messages.success(request, _('Signup was successful. You need to activate your account before you can proceed to log in.'))
                 return HttpResponseRedirect(SIGNUP_SUCCESS_URL or reverse('login'))
-            except Exception as e:
-                # This should never happen. However, in case it ever should, delete unusable User:
+            else:
+                # This should not happen, unless the user profile form can't be validated
+                # with the data validated using the POST form.
                 new_user.delete()
-                raise e
+                raise Exception("Form '%s' could be validated, while '%s' couldn't. Please make sure the two classes are compatible. Validation errors were: %s" % 
+                    (signup_form.__class__.__name__, user_profile_form.__class__.__name__, user_profile_form.errors.as_text()))
     else:
         signup_form = SIGNUP_FORM_CLASS(initial=request.GET)
     context_dict = {
@@ -44,7 +49,8 @@ def signup(request):
 
 def _user_detail(request, user):
     context_dict = {
-        'user' : user
+        'user' : user,
+        'profile': user.get_profile(),
     }
     return render_to_response('user_profiles/profile/detail.html',
         context_dict, context_instance=RequestContext(request))
@@ -72,6 +78,8 @@ def _user_change(request, user):
                 return HttpResponseRedirect(reverse('user_detail', args=[getattr_field_lookup(user, app_settings.URL_FIELD)]))
             else:
                 return HttpResponseRedirect(reverse('current_user_detail'))
+        else:
+            messages.error(request, _('Please correct the errors below.'))
     else:
         try:
             profile = user.get_profile()

@@ -1,5 +1,5 @@
 from django.core.exceptions import ImproperlyConfigured
-from django.contrib.auth.models import SiteProfileNotAvailable
+from django.contrib.auth.models import User, SiteProfileNotAvailable
 from django.db import models
 from django.utils.importlib import import_module
 
@@ -28,6 +28,10 @@ def get_user_profile_model():
         return model
     except (ImportError, ImproperlyConfigured):
         raise SiteProfileNotAvailable
+
+def create_profile_for_new_user(user):
+    model = get_user_profile_model()
+    model(user=user).save()
 
 def get_class_from_path(path):
     i = path.rfind('.')

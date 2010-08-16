@@ -6,3 +6,5 @@ PROFILE_FORM = getattr(settings, 'USER_PROFILES_PROFILE_FORM', 'user_profiles.fo
 AUTHENTICATION_FORM = getattr(settings, 'USER_PROFILES_AUTHENTICATION_FORM', 'django.contrib.auth.forms.AuthenticationForm')
 
 URL_FIELD = getattr(settings, 'USER_PROFILES_URL_FIELD', 'pk')
+
+USER_IS_ACTIVE_ON_SIGNUP = getattr(settings, 'USER_PROFILES_USER_IS_ACTIVE_ON_SIGNUP', False)
