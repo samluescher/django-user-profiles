@@ -1,13 +1,8 @@
 {% extends "user_profiles/base.html" %}
 
-{% block title %}
-{{ block.super }}
-{{ user.username }}
-{% endblock %}
-
-{% block heading %}{{ user.get_profile.first_name }}{% endblock %}
+{% block title %}{{ block.super }}{{ profile }}{% endblock %}
+{% block heading %}{{ profile }}{% endblock %}
 
 {% block content %}
-{% %}
 {% endblock %}
 
