@@ -1,5 +1,6 @@
 from user_profiles.activation.models import ActivationCode
 from user_profiles.activation.utils import require_activation_from_user, accept_activation_code
+from user_profiles.activation.signals import activation_complete
 from django.conf import settings
 from django import forms
 from django.shortcuts import render_to_response
@@ -36,6 +37,7 @@ def activate(request, key=None):
                     messages.success(request, _('Thank you, activation was successful. You can now proceed to log in.'))
                 else:
                     messages.success(request, _('Thank you, activation was successful.'))
+                    activation_complete.send(__name__, user=activation_code.user)
             if request.user == activation_code.user:
                 return HttpResponseRedirect(reverse('current_user_detail'))
             else:

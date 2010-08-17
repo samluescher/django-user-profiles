@@ -1,5 +1,6 @@
 from user_profiles.utils import get_class_from_path, getattr_field_lookup
 from user_profiles import settings as app_settings
+from user_profiles.signals import signup_complete
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
@@ -32,6 +33,7 @@ def signup(request):
                     messages.success(request, _('Signup was successful. You can now proceed to log in.'))
                 else:
                     messages.success(request, _('Signup was successful. You need to activate your account before you can proceed to log in.'))
+                signup_complete.send(__name__, user=new_user)
                 return HttpResponseRedirect(SIGNUP_SUCCESS_URL or reverse('login'))
             else:
                 # This should not happen, unless the user profile form can't be validated
