@@ -1,9 +1,10 @@
 from user_profiles import settings as app_settings
 from user_profiles.utils import get_class_from_path
+from django.conf import settings
 from django.conf.urls.defaults import *
 from django.contrib.auth import views as auth_views
 
-urlpatterns = patterns('',
+pat = [
     url(r'^signup/$', 'user_profiles.views.signup', name='signup'),
     url(r'^login/$', auth_views.login, {'template_name': 'user_profiles/login.html', 'authentication_form': get_class_from_path(app_settings.AUTHENTICATION_FORM)}, name='login'),
     url(r'^logout/$', auth_views.logout_then_login, name='logout'),
@@ -17,7 +18,9 @@ urlpatterns = patterns('',
     url(r'^profile/you/change/$', 'user_profiles.views.current_user_profile_change', name='current_user_profile_change'),
     url(r'^profile/you/$', 'user_profiles.views.current_user_detail', name='current_user_detail'),
     url(r'^profile/(.*?)/$', 'user_profiles.views.user_detail', name='user_detail'),
+]
 
-    (r'^', include('user_profiles.activation.urls')),
-)
+if 'user_profiles.activation' in settings.INSTALLED_APPS:
+    pat.append(url(r'^', include('user_profiles.activation.urls')))
 
+urlpatterns = patterns('', *pat)
