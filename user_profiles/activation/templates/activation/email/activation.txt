@@ -1,0 +1,16 @@
+{% load i18n %}{% blocktrans with site.name as site_name %}Dear {{ recipient }},
+
+Please click or copy and paste this URL into your browser to complete activation for your account:
+
+{{ url }}
+
+If the above link doesn't work, go to {{ form_url }} and enter the following information:
+
+Activation code: {{ key }}
+
+Thank you for using our service.
+Best regards,
+
+The {{ site_name }} crew.
+{{ site_url }}
+{% endblocktrans %}

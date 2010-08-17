@@ -14,7 +14,8 @@ class SignupForm(UserCreationForm):
         from user_profiles import settings as app_settings
         user = super(SignupForm, self).save(commit=False)
         user.is_active = app_settings.USER_IS_ACTIVE_ON_SIGNUP
-        user.save()
+        if commit:
+            user.save()
         return user
 
 class EmailAsUsernameSignupForm(SignupForm):
@@ -36,5 +37,6 @@ class EmailAsUsernameSignupForm(SignupForm):
     def save(self, commit=True):
         user = super(EmailAsUsernameSignupForm, self).save(commit=False)
         user.username = user.email
-        user.save()
+        if commit:
+            user.save()
         return user

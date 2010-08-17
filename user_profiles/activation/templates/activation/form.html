@@ -1,0 +1,13 @@
+{% extends "user_profiles/base.html" %}
+{% load i18n %}
+
+{% block title %}Activation{% endblock %}
+{% block heading %}Activation{% endblock %}
+
+{% block content %}
+<form id="activation-form" method="post" action="">{% csrf_token %}
+{{ form.as_p }}
+<input type="hidden" name="next" value="{{ next }}" />
+<input type="submit" value="{% trans 'Activate' %}" />
+</form>
+{% endblock %}
