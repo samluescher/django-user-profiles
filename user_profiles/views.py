@@ -90,7 +90,8 @@ def _user_change(request, user):
             form = PROFILE_FORM_CLASS()
     
     context_dict = {
-        'form' : form
+        'form' : form,
+        'profile' : profile,
     }
     
     return render_to_response('user_profiles/profile/change.html',
