@@ -1,10 +1,8 @@
 {% extends "user_profiles/base.html" %}
 {% load i18n %}
 
-{% block title %}
-{{ block.super }}
-{{ request.user.username }} – edit profile
-{% endblock %}
+{% block title %}{{ block.super }}{{ profile }}{% endblock %}
+{% block heading %}{{ profile }}{% endblock %}
 
 {% block content %}
 <form method="POST" action="">
