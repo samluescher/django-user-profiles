@@ -1,4 +1,5 @@
 from user_profiles.utils import get_user_profile_model
+from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
@@ -19,7 +20,7 @@ class SignupForm(UserCreationForm):
         return user
 
 class EmailAsUsernameSignupForm(SignupForm):
-    email = forms.EmailField(required=True, max_length=30, label=_('E-mail address'), help_text=_('Your e-mail address is your username. You need to provide a valid address in order to use your account.'))
+    email = forms.EmailField(required=True, max_length=30, label=_('E-mail address'), help_text=_('Your e-mail address is your username. You need to provide a valid address to log in.'))
 
     class Meta:
         model = User
@@ -30,8 +31,8 @@ class EmailAsUsernameSignupForm(SignupForm):
         del(self.fields['username'])
 
     def clean_email(self):
-        if User.objects.filter(email=self.cleaned_data['email']).exists():
-            raise forms.ValidationError('A user with this e-mail address already exists.')
+        if User.objects.filter(Q(email=self.cleaned_data['email']) | Q(username=self.cleaned_data['email'])).exists():
+            raise forms.ValidationError(_('A user with this e-mail address already exists.'))
         return self.cleaned_data['email']
 
     def save(self, commit=True):

@@ -38,8 +38,16 @@ def send_activation_link_to_user(user, activation_code=None):
         activation_code = ActivationCode(user=user)
         activation_code.save()
 
-    site = Site.objects.get_current()
+    try:
+        site = Site.objects.get_current()
+    except Site.DoesNotExist:
+        site = Site(domain='<unknown>', name='<unknown>')
     domain = site.domain
+    profile = user.get_profile()
+    if profile and profile.__unicode__():
+        recipient = profile
+    else:
+        recipient = user
     context_dict = {
         'url': qualified_url(reverse('user_profiles_activation_activate', args=[activation_code.key]), site),
         'form_url': qualified_url(reverse('user_profiles_activation_form'), site),
@@ -47,8 +55,9 @@ def send_activation_link_to_user(user, activation_code=None):
         'site': site,
         'key': activation_code.key,
         'user': user,
-        'recipient': user.get_profile() or user,
+        'recipient': recipient,
+        'profile': profile,
     }
-    subject = get_template('activation/email/activation_subject.txt').render(Context(context_dict)).replace('\n', '')
-    message = get_template('activation/email/activation.txt').render(Context(context_dict))
+    subject = get_template('activation/email/activation_request.subject.txt').render(Context(context_dict, autoescape=False)).replace('\n', '')
+    message = get_template('activation/email/activation_request.txt').render(Context(context_dict, autoescape=False))
     send_mail(subject, message, None, [user.email], fail_silently=False)

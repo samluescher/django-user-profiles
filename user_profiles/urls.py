@@ -12,12 +12,15 @@ pat = [
     url(r'^pwd/reset/done/$', auth_views.password_reset_done, kwargs={'template_name': 'user_profiles/password_reset_done.html'}),
     url(r'^pwd/reset/confirm/(?P<uidb36>[-\w]+)/(?P<token>[-\w]+)/$', auth_views.password_reset_confirm, kwargs={'template_name': 'user_profiles/password_reset_confirm.html'}),
     url(r'^pwd/reset/complete/$', auth_views.password_reset_complete, kwargs={'template_name': 'user_profiles/password_reset_complete.html'}),
-    url(r'^pwd/change/$', auth_views.password_change, name='password_change', kwargs={'template_name': 'user_profiles/password_change_form.html'}),
-    url(r'^pwd/change/done/$', auth_views.password_change_done, kwargs={'template_name': 'user_profiles/password_change_done.html'}),
+    url(r'^profile/you/password_change/$', auth_views.password_change, name='password_change', kwargs={'template_name': 'user_profiles/password_change_form.html'}),
+    url(r'^profile/you/password_change/done/$', auth_views.password_change_done, kwargs={'template_name': 'user_profiles/password_change_done.html'}),
     #url(r'^profile/(.*?)/change/$', 'user_profiles.views.change', name='user_profile_change'),
     url(r'^profile/you/change/$', 'user_profiles.views.current_user_profile_change', name='current_user_profile_change'),
     url(r'^profile/you/$', 'user_profiles.views.current_user_detail', name='current_user_detail'),
     url(r'^profile/(.*?)/$', 'user_profiles.views.user_detail', name='user_detail'),
+    # The following patterns catch URLs that have no views and redirect to the current user
+    url(r'^profile/$', 'user_profiles.views.redirect_to_current_user_detail'),
+    url(r'^$', 'user_profiles.views.redirect_to_current_user_detail'),
 ]
 
 if 'user_profiles.activation' in settings.INSTALLED_APPS:

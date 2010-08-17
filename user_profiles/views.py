@@ -32,7 +32,7 @@ def signup(request):
                 if new_user.is_active:
                     messages.success(request, _('Signup was successful. You can now proceed to log in.'))
                 else:
-                    messages.success(request, _('Signup was successful. You need to activate your account before you can proceed to log in.'))
+                    messages.success(request, _('Signup was successful. Activation ist required before you can proceed to log in.'))
                 signup_complete.send(__name__, user=new_user)
                 return HttpResponseRedirect(SIGNUP_SUCCESS_URL or reverse('login'))
             else:
@@ -100,3 +100,7 @@ def _user_change(request, user):
 @login_required
 def current_user_profile_change(request):
     return _user_change(request, request.user)
+    
+@login_required
+def redirect_to_current_user_detail(request):
+    return HttpResponseRedirect(reverse('current_user_detail'))
