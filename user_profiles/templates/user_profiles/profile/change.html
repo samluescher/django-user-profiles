@@ -1,14 +1,18 @@
 {% extends "user_profiles/base.html" %}
 {% load i18n %}
 
-{% block title %}{{ block.super }}{{ profile }}{% endblock %}
-{% block heading %}{{ profile }}{% endblock %}
+{% block title %}{% trans "Edit profile" %} – {{ profile }}{% endblock %}
+{% block heading %}<h2>Edit profile</h2>{% endblock %}
 
 {% block content %}
 <form method="POST" action="">
-	{{ form.as_p }} 
-	{% csrf_token %}
-	<input type="submit" value="{% trans "Save" %}" />
+    {% csrf_token %}
+    {% for field in form %}
+    {% include "includes/field_as_p.html" %}
+    {% endfor %}
+    <ul class="nav">
+        <li><input type="submit" value="{% trans "Save" %}" /></li>
+    </ul>
 </form>
 {% endblock %}
 

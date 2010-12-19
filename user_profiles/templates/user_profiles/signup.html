@@ -1,13 +1,25 @@
 {% extends "user_profiles/base.html" %}
 {% load i18n %}
 
-{% block title %}Sign up{% endblock %}
-{% block heading %}Sign up{% endblock %}
+{% block title %}{% trans "Sign up" %}{% endblock %}
+{% block heading %}<h2>{% trans "Sign up" %}</h2>{% endblock %}
 
 {% block content %}
-<form id="signupForm" method="post" action="">{% csrf_token %}
-{{ form.as_p }}
-<input type="hidden" name="next" value="{{ next }}" />
-<input type="submit" value="{% trans 'Sign up' %}" />
+<form id="signupForm" method="post" action="">
+    {% csrf_token %}
+    {% block fields %}
+    {% for field in form %}
+    {% include "includes/field_as_p.html" %}
+    {% endfor %}
+	<input type="hidden" name="next" value="{{ next }}" />
+	{% endblock %}
+	{% block submit %}
+	<ul class="nav">
+        <li><input type="submit" value="{% trans 'Sign up' %}" /></li>
+    </ul>
+    {% endblock %}
 </form>
+{% block form_footer %}
+<p class="details required-message">{% trans "The marked fields are required." %}</p>
+{% endblock %}
 {% endblock %}

@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save
+from user_profiles.signals import post_signup
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
@@ -17,10 +17,8 @@ class ActivationCode(models.Model):
             self.key = uuid.uuid4().hex
         super(ActivationCode, self).save(*args, **kwargs)
 
-def post_save_send_activation_link_to_new_user(sender, **kwargs):
+def post_signup_send_activation_link_to_new_user(sender, **kwargs):
     from user_profiles.activation.utils import send_activation_link_to_user
-    if kwargs['created'] and sender == User:
-        send_activation_link_to_user(kwargs['instance'])
+    send_activation_link_to_user(kwargs['user'], created=True)
 
-post_save_send_activation_link_to_new_user
-post_save.connect(post_save_send_activation_link_to_new_user)
+post_signup.connect(post_signup_send_activation_link_to_new_user)

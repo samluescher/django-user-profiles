@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-17 18:02+0200\n"
+"POT-Creation-Date: 2010-10-22 16:43+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,35 +16,43 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
-#: forms.py:23
+#: forms.py:15 forms.py:28 forms.py:50
 msgid "E-mail address"
 msgstr "E-Mail-Adresse"
 
-#: forms.py:23
+#: forms.py:18
+msgid "Username"
+msgstr "Benutzername"
+
+#: forms.py:28 forms.py:50
 msgid ""
-"Your e-mail address is your username. You need to provide a valid address in "
-"order to use your account."
+"Your e-mail address is your username. You need to provide a valid address to "
+"log in."
 msgstr ""
 "Die E-Mail-Adresse ist der Benutzername. Zur Anmeldung ist eine gültige "
-"Adresse ist notwendig."
+"Adresse notwendig."
 
-#: forms.py:35
+#: forms.py:62
 msgid "A user with this e-mail address already exists."
 msgstr "Ein Benutzer mit dieser E-Mail-Adresse existiert bereits."
 
-#: models.py:20
+#: models.py:49
 msgid "user profile"
 msgstr "Benutzerprofil"
 
-#: models.py:21
+#: models.py:50
 msgid "user profiles"
 msgstr "Benutzerprofile"
 
-#: views.py:33
+#: models.py:57
+msgid "Name"
+msgstr "Name"
+
+#: views.py:35
 msgid "Signup was successful. You can now proceed to log in."
 msgstr "Die Registration war erfolgreich. Sie können sich nun anmelden."
 
-#: views.py:35
+#: views.py:37
 msgid ""
 "Signup was successful. Activation ist required before you can proceed to log "
 "in."
@@ -52,52 +60,60 @@ msgstr ""
 "Die Registration war erfolgreich. Vor der Anmeldung ist eine Aktivierung "
 "notwendig."
 
-#: views.py:78
+#: views.py:85
 msgid "Your changes were saved."
 msgstr "Die Änderungen wurden gespeichert."
 
-#: views.py:84
+#: views.py:91
 msgid "Please correct the errors below."
 msgstr "Bitte die untenstehenden Fehler korrigieren."
 
+#: views.py:110
+msgid "You have been logged out."
+msgstr "Sie sind jetzt abgemeldet."
+
+#: views.py:131
+msgid "Your password was changed."
+msgstr "Das Passwort wurde geändert."
+
+#: views.py:143
+msgid "Your password has been set.  You may go ahead and log in now."
+msgstr ""
+
 #: activation/views.py:16
 msgid "Activation code"
-msgstr "Aktivierungscode"
+msgstr ""
 
 #: activation/views.py:33
 msgid "This activation code has already been used."
-msgstr "Dieser Aktivierungscode wurde bereits benutzt."
+msgstr ""
 
 #: activation/views.py:37
+#, fuzzy
 msgid "Thank you, activation was successful. You can now proceed to log in."
-msgstr ""
-"Vielen Dank, die Aktivierung war erfolgreich. Sie können sich nun anmelden."
+msgstr "Die Registration war erfolgreich. Sie können sich nun anmelden."
 
 #: activation/views.py:39
 msgid "Thank you, activation was successful."
-msgstr "Vielen Dank, die Aktivierung war erfolgreich."
+msgstr ""
 
 #: activation/views.py:46
 msgid "This is not a valid activation code."
-msgstr "Dies ist kein gültiger Aktivierungscode."
+msgstr ""
 
 #: activation/views.py:58
 #, python-format
 msgid ""
-"An activation code has been sent to the email address %(email)s. Please "
+"An activation code has been sent to your email address: %(email)s. Please "
 "click the link in the email in order to activate."
 msgstr ""
-"Ein Aktivierungscode wurde an die Adresse %(email)s geschickt. Bitte den in "
-"der Nachricht enthaltenen Link zur Aktivierung anklicken."
 
 #: activation/templates/activation/form.html:11
 msgid "Activate"
-msgstr "Aktivieren"
+msgstr ""
 
 #: templates/user_profiles/logged_out.html:4
-#: templates/user_profiles/password_change_done.html:4
 #: templates/user_profiles/password_change_form.html:5
-#: templates/user_profiles/password_reset_complete.html:4
 #: templates/user_profiles/password_reset_confirm.html:4
 #: templates/user_profiles/password_reset_done.html:4
 #: templates/user_profiles/password_reset_form.html:4
@@ -106,15 +122,14 @@ msgstr "Start"
 
 #: templates/user_profiles/logged_out.html:8
 msgid "Thanks for spending some quality time with the Web site today."
-msgstr ""
+msgstr "Sie sind abgemeldet."
 
 #: templates/user_profiles/logged_out.html:10
 msgid "Log in again"
 msgstr "Zur Anmeldung"
 
 #: templates/user_profiles/login.html:4 templates/user_profiles/login.html:5
-#: templates/user_profiles/login.html:24
-#: templates/user_profiles/password_reset_complete.html:11
+#: templates/user_profiles/login.html:18
 msgid "Log in"
 msgstr "Anmelden"
 
@@ -124,93 +139,63 @@ msgstr ""
 "Diese Kombination von Benutzername und Passwort ist ungültig. Bitte erneut "
 "versuchen."
 
-#: templates/user_profiles/login.html:29
-#: templates/user_profiles/signup.html:11
+#: templates/user_profiles/login.html:23 templates/user_profiles/signup.html:4
+#: templates/user_profiles/signup.html:5
+#: templates/user_profiles/signup.html:18
 msgid "Sign up"
 msgstr "Registrieren"
 
-#: templates/user_profiles/login.html:30
+#: templates/user_profiles/login.html:24
 msgid "Forgot your password?"
 msgstr "Passwort vergessen?"
 
-#: templates/user_profiles/password_change_done.html:3
 #: templates/user_profiles/password_change_form.html:4
 msgid "Documentation"
-msgstr ""
+msgstr "Dokumentation"
 
-#: templates/user_profiles/password_change_done.html:3
 #: templates/user_profiles/password_change_form.html:4
 msgid "Change password"
-msgstr ""
+msgstr "Passwort ändern"
 
-#: templates/user_profiles/password_change_done.html:3
 #: templates/user_profiles/password_change_form.html:4
 msgid "Log out"
-msgstr ""
+msgstr "Abmelden"
 
-#: templates/user_profiles/password_change_done.html:4
 #: templates/user_profiles/password_change_form.html:5
 #: templates/user_profiles/password_change_form.html:7
 #: templates/user_profiles/password_change_form.html:8
 msgid "Password change"
-msgstr ""
+msgstr "Passwort ändern"
 
-#: templates/user_profiles/password_change_done.html:6
-#: templates/user_profiles/password_change_done.html:7
-msgid "Password change successful"
-msgstr ""
-
-#: templates/user_profiles/password_change_done.html:10
-msgid "Your password was changed."
-msgstr ""
-
-#: templates/user_profiles/password_change_form.html:15
-#: templates/user_profiles/password_reset_confirm.html:20
+#: templates/user_profiles/password_change_form.html:18
+#: templates/user_profiles/password_reset_confirm.html:21
 msgid "Change my password"
+msgstr "Passwort ändern"
+
+#: templates/user_profiles/password_reset_confirm.html:4
+msgid "Password reset confirmation"
 msgstr ""
 
-#: templates/user_profiles/password_reset_complete.html:4
 #: templates/user_profiles/password_reset_confirm.html:6
 #: templates/user_profiles/password_reset_done.html:4
 #: templates/user_profiles/password_reset_form.html:4
 #: templates/user_profiles/password_reset_form.html:6
 #: templates/user_profiles/password_reset_form.html:7
 msgid "Password reset"
-msgstr ""
-
-#: templates/user_profiles/password_reset_complete.html:6
-#: templates/user_profiles/password_reset_complete.html:7
-msgid "Password reset complete"
-msgstr ""
-
-#: templates/user_profiles/password_reset_complete.html:10
-msgid "Your password has been set.  You may go ahead and log in now."
-msgstr ""
-
-#: templates/user_profiles/password_reset_confirm.html:4
-msgid "Password reset confirmation"
-msgstr ""
+msgstr "Passwort zurücksetzen"
 
 #: templates/user_profiles/password_reset_confirm.html:7
 msgid "Enter new password"
+msgstr ""
+
+#: templates/user_profiles/password_reset_confirm.html:7
+msgid "Password reset unsuccessful"
 msgstr ""
 
 #: templates/user_profiles/password_reset_confirm.html:13
 msgid ""
 "Please enter your new password twice so we can verify you typed it in "
 "correctly."
-msgstr ""
-
-#: templates/user_profiles/password_reset_confirm.html:17
-msgid "New password:"
-msgstr ""
-
-#: templates/user_profiles/password_reset_confirm.html:19
-msgid "Confirm password:"
-msgstr ""
-
-#: templates/user_profiles/password_reset_confirm.html:25
-msgid "Password reset unsuccessful"
 msgstr ""
 
 #: templates/user_profiles/password_reset_confirm.html:27
@@ -230,49 +215,27 @@ msgid ""
 "address you submitted. You should be receiving it shortly."
 msgstr ""
 
-#: templates/user_profiles/password_reset_email.html:2
-msgid "You're receiving this e-mail because you requested a password reset"
-msgstr ""
-
-#: templates/user_profiles/password_reset_email.html:3
-#, python-format
-msgid "for your user account at %(site_name)s"
-msgstr ""
-
-#: templates/user_profiles/password_reset_email.html:5
-msgid "Please go to the following page and choose a new password:"
-msgstr ""
-
-#: templates/user_profiles/password_reset_email.html:9
-msgid "Your username, in case you've forgotten:"
-msgstr ""
-
-#: templates/user_profiles/password_reset_email.html:11
-msgid "Thanks for using our site!"
-msgstr ""
-
-#: templates/user_profiles/password_reset_email.html:13
-#, python-format
-msgid "The %(site_name)s team"
-msgstr ""
-
 #: templates/user_profiles/password_reset_form.html:10
 msgid ""
 "Forgotten your password? Enter your e-mail address below, and we'll e-mail "
 "instructions for setting a new one."
 msgstr ""
 
-#: templates/user_profiles/password_reset_form.html:14
-msgid "E-mail address:"
-msgstr ""
-
-#: templates/user_profiles/password_reset_form.html:14
+#: templates/user_profiles/password_reset_form.html:18
 msgid "Reset my password"
 msgstr ""
 
-#: templates/user_profiles/profile/change.html:11
+#: templates/user_profiles/signup.html:23
+msgid "The marked fields are required."
+msgstr "Die markierten Felder werden benötigt."
+
+#: templates/user_profiles/profile/change.html:4
+msgid "Edit profile"
+msgstr "Benutzerprofil ändern"
+
+#: templates/user_profiles/profile/change.html:14
 msgid "Save"
-msgstr ""
+msgstr "Speichern"
 
 #: templatetags/user_profile_tags.py:7
 #, python-format
@@ -293,3 +256,13 @@ msgstr "Sehr geehrte Familie %(last_name)s"
 #, python-format
 msgid "Dear Mr %(last_name)s,"
 msgstr "Sehr geehrter Herr %(last_name)s"
+
+#~ msgid "Password reset complete"
+#~ msgstr "Passwort erfolgreich zurückgesetzt."
+
+#, fuzzy
+#~ msgid "The password was successfully reset."
+#~ msgstr "Das Passwort wurde geändert."
+
+#~ msgid "Password change successful"
+#~ msgstr "Passwort erfolgreich geändert"

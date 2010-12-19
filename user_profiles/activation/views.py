@@ -1,6 +1,6 @@
 from user_profiles.activation.models import ActivationCode
 from user_profiles.activation.utils import require_activation_from_user, accept_activation_code
-from user_profiles.activation.signals import activation_complete
+from user_profiles.activation.signals import post_activation
 from django.conf import settings
 from django import forms
 from django.shortcuts import render_to_response
@@ -37,7 +37,7 @@ def activate(request, key=None):
                     messages.success(request, _('Thank you, activation was successful. You can now proceed to log in.'))
                 else:
                     messages.success(request, _('Thank you, activation was successful.'))
-                    activation_complete.send(__name__, user=activation_code.user)
+                    post_activation.send(__name__, user=activation_code.user)
             if request.user == activation_code.user:
                 return HttpResponseRedirect(reverse('current_user_detail'))
             else:
@@ -49,15 +49,15 @@ def activate(request, key=None):
     return render_to_response('activation/form.html', {'form': form}, context_instance=RequestContext(request))
 
 @login_required
-def current_user_resend(request):
+def current_user_send(request):
     try:
         activation_code = ActivationCode.objects.filter(user=request.user, activated=False)[0]
     except IndexError:
         activation_code = None
     require_activation_from_user(request.user, activation_code)
-    success_message = _('An activation code has been sent to the email address %(email)s. Please click the link in the email in order to activate.' % {
+    success_message = _('An activation code has been sent to your email address: %(email)s. Please click the link in the email in order to activate.') % {
         'email': request.user.email
-    })
+    }
     messages.success(request, success_message)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', settings.LOGIN_REDIRECT_URL))
     

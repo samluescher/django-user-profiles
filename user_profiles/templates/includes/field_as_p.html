@@ -1,0 +1,12 @@
+{% if field.is_hidden %}
+{{ field }}
+{% else %}
+<div class="form-row {% if field.errors %}errors{% else %}valid{% endif %}">
+    {{ field.errors }}
+    <p class="{% if field.field.required %}required{% else %}optional{% endif %}">
+        <label for="{{ field.auto_id }}">{{ field.label }}</label>
+        {{ field }}
+        {% if field.help_text %}<span class="help-text">{{ field.help_text|linebreaksbr }}</span>{% endif %}
+    </p>
+</div>
+{% endif %}

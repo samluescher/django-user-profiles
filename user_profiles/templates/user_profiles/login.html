@@ -2,27 +2,21 @@
 {% load i18n %}
 
 {% block title %}{% trans 'Log in' %}{% endblock %}
-{% block heading %}{% trans 'Log in' %}{% endblock %}
+{% block heading %}<h2>{% trans 'Log in' %}</h2>{% endblock %}
 
 {% block content %}
 {% if form.errors %}
 <p>{% blocktrans %}Your username and password didn't match. Please try again.{% endblocktrans %}</p>
 {% endif %}
 
-<form method="post" action="{% url django.contrib.auth.views.login %}">{% csrf_token %}
-<table>
-<tr>
-    <td>{{ form.username.label_tag }}</td>
-    <td>{{ form.username }}</td>
-</tr>
-<tr>
-    <td>{{ form.password.label_tag }}</td>
-    <td>{{ form.password }}</td>
-</tr>
-</table>
-
-<input type="submit" value="{% trans "Log in" %}" />
-<input type="hidden" name="next" value="{{ next }}" />
+<form class="login" method="post" action="{% url django.contrib.auth.views.login %}">{% csrf_token %}
+    {% for field in form %}
+    {% include "includes/field_as_p.html" %}
+    {% endfor %}
+    <input type="hidden" name="next" value="{{ next }}" />
+    <ul class="nav">
+        <li><input type="submit" value="{% trans "Log in" %}" /></li>
+    </ul>
 </form>
 
 <ul class="nav">

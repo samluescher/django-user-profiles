@@ -1,6 +1,6 @@
-{% load i18n %}{% blocktrans with site.name as site_name %}Dear {{ recipient }},
+{% load i18n %}{% blocktrans %}Dear {{ recipient }},{% endblocktrans %}
 
-Please click or copy and paste this URL into your browser to complete activation for your account:
+{% if created %}{% blocktrans with site.name as site_name %}Welcome! You just registered at {{ site_name }}.{% endblocktrans %} {% endif %}{% blocktrans with site.name as site_name %}Please click or copy and paste this URL into your browser to complete activation for your account:
 
 {{ url }}
 

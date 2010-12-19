@@ -1,0 +1,51 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-09-30 14:29+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+#: views.py:16
+msgid "Activation code"
+msgstr "Aktivierungscode"
+
+#: views.py:33
+msgid "This activation code has already been used."
+msgstr "Dieser Aktivierungscode wurde bereits benutzt."
+
+#: views.py:37
+msgid "Thank you, activation was successful. You can now proceed to log in."
+msgstr ""
+"Vielen Dank, die Aktivierung war erfolgreich. Sie können sich nun anmelden."
+
+#: views.py:39
+msgid "Thank you, activation was successful."
+msgstr "Vielen Dank, die Aktivierung war erfolgreich."
+
+#: views.py:46
+msgid "This is not a valid activation code."
+msgstr "Dies ist kein gültiger Aktivierungscode."
+
+#: views.py:58
+msgid ""
+"An activation code has been sent to your email address: %(email)s. Please "
+"click the link in the email in order to activate."
+msgstr ""
+"Ein Aktivierungscode wurde an folgende Adresse geschickt: %(email)s. Bitte den in "
+"der Nachricht enthaltenen Link zur Aktivierung anklicken."
+
+#: templates/activation/form.html:11
+msgid "Activate"
+msgstr "Aktivieren"

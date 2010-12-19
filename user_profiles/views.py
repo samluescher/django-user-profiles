@@ -1,6 +1,7 @@
 from user_profiles.utils import get_class_from_path, getattr_field_lookup
 from user_profiles import settings as app_settings
-from user_profiles.signals import signup_complete
+from user_profiles.signals import post_signup
+from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
@@ -9,7 +10,8 @@ from django.template import Template
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, Http404
+from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response, get_object_or_404 
 from django.core.exceptions import PermissionDenied
@@ -33,7 +35,7 @@ def signup(request):
                     messages.success(request, _('Signup was successful. You can now proceed to log in.'))
                 else:
                     messages.success(request, _('Signup was successful. Activation ist required before you can proceed to log in.'))
-                signup_complete.send(__name__, user=new_user)
+                post_signup.send(__name__, user=new_user)
                 return HttpResponseRedirect(SIGNUP_SUCCESS_URL or reverse('login'))
             else:
                 # This should not happen, unless the user profile form can't be validated
@@ -49,22 +51,27 @@ def signup(request):
     return render_to_response('user_profiles/signup.html', 
         context_dict, context_instance=RequestContext(request))
 
-def _user_detail(request, user):
+def _user_detail(request, user, extra_context={}):
     context_dict = {
         'user' : user,
         'profile': user.get_profile(),
     }
+    context_dict.update(extra_context)
     return render_to_response('user_profiles/profile/detail.html',
         context_dict, context_instance=RequestContext(request))
 
 @login_required
-def user_detail(request, lookup_value):
+def user_detail(request, lookup_value, extra_context={}):
     kwargs = {app_settings.URL_FIELD: lookup_value}
-    return _user_detail(request, get_object_or_404(User, **kwargs))
+    try:
+        user = User.objects.get(**kwargs)
+        return _user_detail(request, user, extra_context)
+    except (User.DoesNotExist, ValueError):
+        raise Http404
 
 @login_required
-def current_user_detail(request):
-    return _user_detail(request, request.user)
+def current_user_detail(request, extra_context={}):
+    return _user_detail(request, request.user, extra_context)
 
 def _user_change(request, user):
     if request.method == 'POST':
@@ -75,7 +82,7 @@ def _user_change(request, user):
             form = PROFILE_FORM_CLASS(request.POST)        
         if form.is_valid():
             form.save()
-            messages.add_message(request, messages.INFO, _('Your changes were saved.'))
+            messages.add_message(request, messages.SUCCESS, _('Your changes were saved.'))
             if user != request.user:
                 return HttpResponseRedirect(reverse('user_detail', args=[getattr_field_lookup(user, app_settings.URL_FIELD)]))
             else:
@@ -97,6 +104,12 @@ def _user_change(request, user):
     return render_to_response('user_profiles/profile/change.html',
         context_dict, context_instance=RequestContext(request))
 
+
+def logout_then_login(request, **kwargs):
+    result = auth_views.logout_then_login(request, **kwargs)
+    messages.info(request, _('You have been logged out.'))
+    return result
+    
 @login_required
 def current_user_profile_change(request):
     return _user_change(request, request.user)
@@ -104,3 +117,28 @@ def current_user_profile_change(request):
 @login_required
 def redirect_to_current_user_detail(request):
     return HttpResponseRedirect(reverse('current_user_detail'))
+
+@csrf_protect
+@login_required
+def password_change(request, **kwargs):
+    """
+    Wraps the `contrib.auth` view, redirecting to the user profile page with a user message when done.
+    """
+    if not kwargs.get('post_change_redirect'):
+        kwargs['post_change_redirect'] = reverse('current_user_detail') 
+    result = auth_views.password_change(request, **kwargs)
+    if isinstance(result, HttpResponseRedirect):
+        messages.info(request, _('Your password was changed.'))
+    return result
+
+# Doesn't need csrf_protect since no-one can guess the URL
+def password_reset_confirm(request, **kwargs):
+    """
+    Wraps the `contrib.auth` view, redirecting to the login page with a user message when done.
+    """
+    if not kwargs.get('post_reset_redirect'):
+        kwargs['post_reset_redirect'] = reverse('login') 
+    result = auth_views.password_reset_confirm(request, **kwargs)
+    if isinstance(result, HttpResponseRedirect):
+        messages.info(request, _('Your password has been set.  You may go ahead and log in now.'))
+    return result

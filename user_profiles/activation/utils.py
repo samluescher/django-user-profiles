@@ -1,20 +1,20 @@
-from django.contrib.auth.models import User
+from user_profiles.activation import settings as app_settings
 from user_profiles.activation.models import ActivationCode
+from user_profiles.utils import render_message, qualified_url
+from django.contrib.auth.models import User
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.contrib.sites.models import Site
-from django.template.loader import get_template
-from django.template import Context
 
-def require_activation_from_user(user, activation_code=None, set_user_inactive=False):
+def require_activation_from_user(user, activation_code=None, set_user_inactive=False, profile_instance=None, created=False):
     if set_user_inactive:
         user.is_active = False
         user.save()
-    user_profile = user.get_profile()
-    if hasattr(user_profile, 'deactivate'):
-        user_profile.deactivate()
-    send_activation_link_to_user(user, activation_code)
+    profile_instance = profile_instance or user.get_profile()
+    if hasattr(profile_instance, 'deactivate'):
+        profile_instance.deactivate()
+    send_activation_link_to_user(user, activation_code, created)
     
 def accept_activation_code(activation_code):
     activation_code.user.is_active = True
@@ -25,14 +25,7 @@ def accept_activation_code(activation_code):
     activation_code.activated = True
     activation_code.save()
 
-def qualified_url(path, site, scheme='http'):
-    return '%(scheme)s://%(authority)s%(path)s' % {
-        'scheme': scheme,
-        'authority': site.domain,
-        'path': path
-    }
-
-def send_activation_link_to_user(user, activation_code=None):
+def send_activation_link_to_user(user, activation_code=None, created=False):
     if not activation_code:
         ActivationCode.objects.filter(user=user, activated=False).delete()
         activation_code = ActivationCode(user=user)
@@ -57,7 +50,10 @@ def send_activation_link_to_user(user, activation_code=None):
         'user': user,
         'recipient': recipient,
         'profile': profile,
+        'created': created,
     }
-    subject = get_template('activation/email/activation_request.subject.txt').render(Context(context_dict, autoescape=False)).replace('\n', '')
-    message = get_template('activation/email/activation_request.txt').render(Context(context_dict, autoescape=False))
-    send_mail(subject, message, None, [user.email], fail_silently=False)
+    subject = render_message('activation/email/activation_request.subject.txt', context_dict, remove_newlines=True)
+    message = render_message('activation/email/activation_request.txt', context_dict)
+
+    if app_settings.BY_EMAIL:
+        send_mail(subject, message, None, [user.email], fail_silently=False)
