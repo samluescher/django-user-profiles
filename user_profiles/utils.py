@@ -26,6 +26,7 @@ def get_user_profile_model():
         raise SiteProfileNotAvailable('app_label and model_name should'
                 ' be separated by a dot in the AUTH_PROFILE_MODULE set'
                 'ting')
+
     try:
         model = models.get_model(app_label, model_name)
         if model is None:
@@ -53,6 +54,7 @@ def sync_profile_fields(from_instance, to_instance):
             current_value = getattr(to_instance, field_name)
             if field.editable and not field.auto_created and current_value != new_value:
                 changed_fields.append(field_name)
+                #print "%s: %s" % (field_name, str(new_value))
                 setattr(to_instance, field_name, new_value)
         except models.FieldDoesNotExist:
             pass

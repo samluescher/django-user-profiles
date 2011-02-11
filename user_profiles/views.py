@@ -1,6 +1,7 @@
 from user_profiles.utils import get_class_from_path, getattr_field_lookup
 from user_profiles import settings as app_settings
 from user_profiles.signals import post_signup
+from user_profiles.utils import get_user_profile_model
 from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -74,11 +75,12 @@ def current_user_detail(request, extra_context={}):
     return _user_detail(request, request.user, extra_context)
 
 def _user_change(request, user):
+    profile_model = get_user_profile_model()
     if request.method == 'POST':
         try:
             profile = user.get_profile()
             form = PROFILE_FORM_CLASS(request.POST, instance=profile)
-        except:
+        except profile_model.DoesNotExist:
             form = PROFILE_FORM_CLASS(request.POST)        
         if form.is_valid():
             form.save()
@@ -93,7 +95,8 @@ def _user_change(request, user):
         try:
             profile = user.get_profile()
             form = PROFILE_FORM_CLASS(instance=profile)
-        except:
+        except profile_model.DoesNotExist:
+            profile = None
             form = PROFILE_FORM_CLASS()
     
     context_dict = {
