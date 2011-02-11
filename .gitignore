@@ -1,0 +1,13 @@
+*.o
+build/**/*
+.DS_Store
+*.app
+*.swp
+*~.nib
+*.pbxuser
+*.perspective
+*.perspectivev3
+*.mode1v3
+*.mode2v3
+.AppleDouble
+*.pyc
