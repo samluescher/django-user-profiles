@@ -6,8 +6,10 @@ Introduction
 
 django-user-profiles is a Django app TODO
 
-You should read Django's documentation on `storing additional information about
-users <https://docs.djangoproject.com/en/1.3/topics/auth/#storing-additional-information-about-users>`_.
+This app builds upon Django's concept of `storing additional information about
+users <https://docs.djangoproject.com/en/1.3/topics/auth/#storing-additional-information-about-users>`_,
+so you should make sure to read all revelant Django documentation in order to
+properly use this app.
 
 
 Table of Contents
@@ -17,11 +19,13 @@ Table of Contents
    :maxdepth: 2
 
    installation
-   admin
    models
+   middleware
+   admin
    templatetags
    configuration
    activation 
+   multiple-profiles
    
    
 Indices and tables

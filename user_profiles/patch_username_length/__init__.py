@@ -5,18 +5,19 @@ MAX_LENGTH = 75
 
 def patch_user_model(sender, *args, **kwargs):
     """
-    Patches the `username` field of `django.contrib.auth.models.User` to a `max_length` of 75 
-    characters (EmailField default `max_length`) so it can store longer email addresses when using 
-    e-mail as username.
+    Patches the `username` field of `django.contrib.auth.models.User` to a
+    `max_length` of 75 characters (EmailField default `max_length`) so it can
+    store longer email addresses when using e-mail as username.
     
-    As seen at http://stackoverflow.com/questions/2610088/can-djangos-auth-user-username-be-varchar75-how-could-that-be-done
+    As seen at
+    http://stackoverflow.com/questions/2610088/can-djangos-auth-user-username-be-varchar75-how-could-that-be-done
     
-    To use this, put the app on top of your INSTALLED_APPS settings. The code below will be executed
-    during Django initialization/ model auto-discovery.
+    To use this, put the app on top of your INSTALLED_APPS settings. The code
+    below will be executed during Django initialization/ model auto-discovery.
     """
-    # You can't just do `if sender == django.contrib.auth.models.User`
-    # because you would have to import the model
-    # You have to test using __name__ and __module__
+    # You can't just do `if sender == django.contrib.auth.models.User` because
+    # you would have to import the model. You have to test using __name__ and
+    # __module__
     if sender.__name__ == "User" and sender.__module__ == "django.contrib.auth.models":
         import logging
         logging.warning('Patching django.contrib.auth.models.User fields `email` and `username` to `max_length=75`, make sure your database has the same limits in order to prevent truncation.')
