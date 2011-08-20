@@ -11,3 +11,5 @@ build/**/*
 *.mode2v3
 .AppleDouble
 *.pyc
+
+django-user-profiles.komodoproject

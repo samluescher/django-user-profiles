@@ -1,3 +1,21 @@
+"""
+By default, Django limits the length of the ``username`` field to 30 characters,
+which is arbitrarily short, especially when you want to use email addresses as
+username. This patch changes the ``max_length`` of the ``username`` field to 75
+characters, same as the ``max_length`` of the ``email`` field so they can be
+kept synchronized.
+
+Install this patch by putting ``user_profiles.patches.username_length`` in your
+``INSTALLED_APPS`` settings before ``django.contrib.auth``::
+
+    INSTALLED_APPS = (
+        'user_profiles.patches.username_length',
+        'django.contrib.auth',
+        # ...
+    )
+
+"""
+
 from user_profiles.signals import create_user_admin_form
 from django.db.models.signals import class_prepared
 
@@ -35,6 +53,7 @@ def patch_admin_forms(sender, **kwargs):
         max_length = sender.instance._meta.get_field('username').max_length
         sender.fields['username'].max_length = max_length
         sender.fields['username'].widget.attrs['maxlength'] = max_length
-        sender.fields['username'].help_text = sender.fields['username'].help_text.replace('30', str(max_length))
+        sender.fields['username'].help_text =  \
+            sender.fields['username'].help_text.replace('30', str(max_length))
 
 create_user_admin_form.connect(patch_admin_forms)

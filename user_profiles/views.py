@@ -1,3 +1,13 @@
+"""
+This module contains the basic views necessary when dealing with user profiles,
+such as signup, login, logout, profile detail and edit pages.
+
+If you included ``user_profiles.urls`` in your url conf, all of these views
+will already be available in your project. If you only need some views, you
+can selectively import them from this module and call them with the
+appropriate parameters.
+"""
+
 from user_profiles.utils import get_class_from_path, getattr_field_lookup
 from user_profiles import settings as app_settings
 from user_profiles.signals import post_signup
@@ -125,7 +135,9 @@ def redirect_to_current_user_detail(request):
 @login_required
 def password_change(request, **kwargs):
     """
-    Wraps the `contrib.auth` view, redirecting to the user profile page with a user message when done.
+    Wraps the standard view for changing passwords provided by ``contrib.auth``,
+    redirecting to the user profile page with a user message when done instead
+    of showing an intermediary page that is sometimes useless.
     """
     if not kwargs.get('post_change_redirect'):
         kwargs['post_change_redirect'] = reverse('current_user_detail') 
@@ -137,7 +149,9 @@ def password_change(request, **kwargs):
 # Doesn't need csrf_protect since no-one can guess the URL
 def password_reset_confirm(request, **kwargs):
     """
-    Wraps the `contrib.auth` view, redirecting to the login page with a user message when done.
+    Wraps the standart password reset view provided by ``contrib.auth`` ,
+    redirecting to the login page with a user message when done instead
+    of showing an intermediary page that is sometimes useless.
     """
     if not kwargs.get('post_reset_redirect'):
         kwargs['post_reset_redirect'] = reverse('login') 

@@ -39,6 +39,7 @@ def get_user_profile_model():
         raise SiteProfileNotAvailable
 
 def create_profile_for_new_user(user):
+    # For internal use only: Creates a profile instance for a new user instance
     model = get_user_profile_model()
     instance = model(user=user)
     sync_profile_fields(user, instance)
@@ -46,6 +47,8 @@ def create_profile_for_new_user(user):
     return instance
 
 def sync_profile_fields(from_instance, to_instance):
+    # For internal use only: Copies fields with the same name between model
+    # instances of arbitrary classes.
     changed_fields = []
     for field_name in from_instance._meta.get_all_field_names():
         try:
@@ -61,6 +64,7 @@ def sync_profile_fields(from_instance, to_instance):
     return changed_fields
 
 def get_class_from_path(path):
+    # Given a Python module path, this function returns the referenced class.
     i = path.rfind('.')
     module, attr = path[:i], path[i+1:]
     try:
@@ -88,6 +92,12 @@ def render_message(template, context_dict, remove_newlines=False):
     return message
 
 def qualified_url(path, site, scheme='http'):
+    """
+    Returns a fully qualified URL (including domain and port) for a given path,
+    which is necessary in contexts such as emails, when you need absolute links
+    instead of relative, path-only links as returned by Django's ``reverse``
+    method.
+    """
     return '%(scheme)s://%(authority)s%(path)s' % {
         'scheme': scheme,
         'authority': site.domain,

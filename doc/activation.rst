@@ -1,2 +1,2 @@
-User Profile Activation
-***********************
+User Activation
+***************

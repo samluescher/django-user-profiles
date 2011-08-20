@@ -219,22 +219,10 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'djangomediatree', u'django-user-profiles Documentation',
+    ('index', 'djangouserprofiles', u'django-user-profiles Documentation',
      [u'Samuel Luescher'], 1)
 ]
 
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {'http://docs.python.org/': None}
-
-# TODO: This should cut some undesired stuff from autodoc signatures, but never
-# gets called.
-def cut_from_signature(app, what, name, obj, options, signature, return_annotation):
-    cut = ('user_profiles.defaults.',)
-    for string in cut:
-        if name.startswith(string):
-            return (name[len(string):], return_annotation)
-    
-def setup(app):
-    app.connect('autodoc-process-signature', cut_from_signature)
-    

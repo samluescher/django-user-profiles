@@ -1,5 +1,5 @@
-Admin interface overview
-************************
+Admin changes
+*************
 
 .. automodule:: user_profiles.admin
    :members:
