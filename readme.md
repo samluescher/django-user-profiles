@@ -9,3 +9,6 @@ You can configure this app to implement various login/signup paradigms:
 * Sign up with email and password – proceed to log in – confirm email address later to use advanced features
 * Sign up with username and password – proceed to log in – add email address later – confirm email address
 * etc.
+
+
+TODO: Document how user can have several profiles.

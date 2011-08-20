@@ -3,6 +3,7 @@ from django.db import models
 
 
 class CreatedByCurrentUserManager(models.Manager):
+    # TODO make field configurable
     def get_query_set(self):
         user = CurrentUserMiddleware.get_current_user()
         if not user or not user.is_authenticated():

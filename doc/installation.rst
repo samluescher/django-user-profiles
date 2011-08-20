@@ -1,0 +1,2 @@
+Installing django-user-profiles
+*******************************
