@@ -21,7 +21,4 @@ pat = [
     #url(r'^$', 'user_profiles.views.redirect_to_current_user_detail'),
 ]
 
-if 'user_profiles.activation' in settings.INSTALLED_APPS:
-    pat.append(url(r'^', include('user_profiles.activation.urls')))
-
 urlpatterns = patterns('', *pat)

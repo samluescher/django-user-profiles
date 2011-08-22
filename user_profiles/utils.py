@@ -5,6 +5,7 @@ from django.utils.importlib import import_module
 from django.template.loader import get_template
 from django.template import Context
 from django.utils.text import normalize_newlines
+from django.conf import settings
 
 _user_profile_model_cache = None
 
@@ -29,7 +30,9 @@ def get_user_profile_model():
 
     try:
         model = models.get_model(app_label, model_name)
-        if model is None:
+        # There is an issue with sphinx_build not being able to import the 
+        # profile model. Simply ignore the error in this case. 
+        if model is None and not getattr(settings, 'IS_SPHINX_BUILD_DUMMY', False):
             raise SiteProfileNotAvailable('Unable to load the profile '
                 'model, check AUTH_PROFILE_MODULE in your project sett'
                 'ings')
@@ -85,8 +88,12 @@ def getattr_field_lookup(obj, lookup):
         obj = manager.all()[0]
     return getattr(obj, attr)
 
-def render_message(template, context_dict, remove_newlines=False):
-    message = get_template(template).render(Context(context_dict, autoescape=False))
+def render_message(template_name, context_dict, remove_newlines=False):
+    """
+    Shortcut method for rendering message templates, such as the ones used for
+    activation emails.
+    """
+    message = get_template(template_name).render(Context(context_dict, autoescape=False))
     if remove_newlines:
         message = normalize_newlines(message).replace('\n', '')
     return message

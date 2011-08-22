@@ -47,3 +47,21 @@ Specifies whether email addresses should be used as usernames. If this is
 enabled, email addresses and usernames will be kept synchronized, and users
 log in with their email address instead of specifying a username. 
 """
+
+PUBLIC = getattr(settings, 'USER_PROFILES_PUBLIC', False)
+"""
+Default: ``False``
+
+Specifies whether all user profiles should be visible to any user, including
+anonymous visitors. Set this to ``False`` if users should not be able to see
+the information of other users.
+"""
+
+PUBLIC_WHEN_LOGGED_IN = getattr(settings, 'USER_PROFILES_PUBLIC_WHEN_LOGGED_IN', False)
+"""
+Default: ``False``
+
+Specifies whether all user profiles should be visible to any logged-in user.
+Set this to ``False`` if users should not be able to see the information of
+other users.
+"""

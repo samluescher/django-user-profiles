@@ -10,6 +10,12 @@ This signal is dispatched after a user has signed up. It is passed the
 respective ``User`` instance. The ``activation`` module uses this signal to
 send users a confirmation email. You can connect to this signal if you need to
 execute custom code after users sign up.
+
+Arguments sent with this signal:
+
+``user``
+    The user object that was just created.
+    
 """
 
 # for internal use only

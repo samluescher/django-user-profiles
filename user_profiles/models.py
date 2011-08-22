@@ -7,7 +7,7 @@ when dealing with user profiles.
 
 from user_profiles import settings as app_settings
 from user_profiles.utils import get_user_profile_model, sync_profile_fields
-from user_profiles.managers import UserDefaultProfileManager, CreatedByCurrentUserManager
+from user_profiles.managers import UserDefaultProfileManager, ByUserManager, ByCurrentUserManager
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
@@ -75,10 +75,14 @@ class UserProfileBase(models.Model):
     An abstract base class for your custom user profile model, defining a few
     commonly used methods, as well as the field :attr:`is_default` which enables
     you to implement a multiple-profiles-per-user feature.
-
+    
     That field is a boolean specifying whether a specific instance is a user's
     default profile and thus will be returned by that user's ``get_profile()``
     method.
+
+    .. note::
+       If in your project every user only has one profile, you can just ignore
+       the ``is_default`` field.
     
     When you subclass this class, the default ``Manager`` of your custom user
     profile model (:attr:`objects`) will only return instances whose
@@ -94,10 +98,14 @@ class UserProfileBase(models.Model):
     ``ModelAdmin``, since site administrators would typically need access to all
     profiles instead of just one individual user's profiles.
     
-    .. note::
+    .. warning::
        If you are implementing a multiple-profiles-per-user feature in your
        project, you should prevent users from deleting their default profile by
-       checking first whether ``is_default`` is ``True``.
+       checking first whether ``is_default`` is ``True``. When creating
+       additonal profiles for a user, you also need to make sure that the
+       ``is_default`` field is ``True`` for exactly one profile object so as not
+       to create any ambiguities that lead to errors. 
+
     """
 
     is_default = models.BooleanField(_('is default profile'), editable=False, default=False)
@@ -120,7 +128,7 @@ class UserProfileBase(models.Model):
     information on how to access user's secondary profiles.
     """
 
-    by_current_user = CreatedByCurrentUserManager()
+    by_current_user = ByCurrentUserManager()
     """
     A ``Manager`` instance providing access to the user profile instances
     created by the currently logged-in user only.
@@ -155,6 +163,8 @@ class UserProfileBase(models.Model):
             return MyUserProfileModel.by_any_user.all()
     
     """
+    
+    by_user = ByUserManager().by_user
     
     def __init__(self, *args, **kwargs):
         super(UserProfileBase, self).__init__(*args, **kwargs)

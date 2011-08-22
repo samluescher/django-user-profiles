@@ -32,7 +32,14 @@ SIGNUP_SUCCESS_URL = None
 SIGNUP_FORM_CLASS = get_class_from_path(app_settings.SIGNUP_FORM)
 PROFILE_FORM_CLASS = get_class_from_path(app_settings.PROFILE_FORM)
 
-def signup(request):
+def signup(request, template_name='user_profiles/signup.html'):
+    """
+    The signup view, creating a new ``User`` object on POST requests and
+    rendering the signup form otherwise.
+    
+    See :ref:`configuration` and :ref:`forms` for information on how to use
+    your own custom form.
+    """
     if request.user.is_authenticated():
         return HttpResponseRedirect(settings.LOGIN_REDIRECT_URL)
     if request.method == 'POST':
@@ -59,32 +66,47 @@ def signup(request):
     context_dict = {
         'form': signup_form
     }
-    return render_to_response('user_profiles/signup.html', 
+    return render_to_response(template_name, 
         context_dict, context_instance=RequestContext(request))
 
-def _user_detail(request, user, extra_context={}):
-    context_dict = {
-        'user' : user,
-        'profile': user.get_profile(),
-    }
-    context_dict.update(extra_context)
-    return render_to_response('user_profiles/profile/detail.html',
-        context_dict, context_instance=RequestContext(request))
+def _user_detail(request, user, template_name,
+    extra_context={}):
+        context_dict = {
+            'user' : user,
+            'profile': user.get_profile(),
+        }
+        context_dict.update(extra_context)
+        return render_to_response(template_name,
+            context_dict, context_instance=RequestContext(request))
+
+def user_detail(request, lookup_value, template_name='user_profiles/profile/detail.html',
+    extra_context={}):
+        """
+        Renders the public detail/profile page for a given user.
+        
+        By default, public profiles are disabled for privacy reasons. See
+        :ref:`configuration` for information on how to enable them.
+        """
+        if not app_settings.PUBLIC and not  \
+            (app_settings.PUBLIC_WHEN_LOGGED_IN and request.user.is_authenticated()) and not  \
+            (request.user.is_staff and request.user.has_perm('auth.change_user')):
+                raise PermissionDenied()
+        kwargs = {app_settings.URL_FIELD: lookup_value}
+        try:
+            user = User.objects.get(**kwargs)
+            return _user_detail(request, user, template_name, extra_context)
+        except (User.DoesNotExist, ValueError):
+            raise Http404
 
 @login_required
-def user_detail(request, lookup_value, extra_context={}):
-    kwargs = {app_settings.URL_FIELD: lookup_value}
-    try:
-        user = User.objects.get(**kwargs)
-        return _user_detail(request, user, extra_context)
-    except (User.DoesNotExist, ValueError):
-        raise Http404
+def current_user_detail(request, template_name='user_profiles/profile/detail.html',
+    extra_context={}):
+        """
+        Renders the detail/profile page for the currently logged-in user.
+        """
+        return _user_detail(request, request.user, template_name, extra_context)
 
-@login_required
-def current_user_detail(request, extra_context={}):
-    return _user_detail(request, request.user, extra_context)
-
-def _user_change(request, user):
+def _user_change(request, user, template_name):
     profile_model = get_user_profile_model()
     if request.method == 'POST':
         try:
@@ -114,21 +136,33 @@ def _user_change(request, user):
         'profile' : profile,
     }
     
-    return render_to_response('user_profiles/profile/change.html',
+    return render_to_response(template_name,
         context_dict, context_instance=RequestContext(request))
 
-
 def logout_then_login(request, **kwargs):
+    """
+    Wraps the standard view for logging out and logging in, additionally
+    creating a user message.
+    """
     result = auth_views.logout_then_login(request, **kwargs)
     messages.info(request, _('You have been logged out.'))
     return result
     
 @login_required
-def current_user_profile_change(request):
-    return _user_change(request, request.user)
+def current_user_profile_change(request, template_name='user_profiles/profile/change.html'):
+    """
+    The profile edit view for the currently logged in user.
+
+    See :ref:`configuration` and :ref:`forms` for information on how to use
+    your own custom form.
+    """
+    return _user_change(request, request.user, template_name)
     
 @login_required
 def redirect_to_current_user_detail(request):
+    """
+    Redirects to the detail/profile page of the currently logged-in user.
+    """
     return HttpResponseRedirect(reverse('current_user_detail'))
 
 @csrf_protect
@@ -137,7 +171,7 @@ def password_change(request, **kwargs):
     """
     Wraps the standard view for changing passwords provided by ``contrib.auth``,
     redirecting to the user profile page with a user message when done instead
-    of showing an intermediary page that is sometimes useless.
+    of showing an intermediary page.
     """
     if not kwargs.get('post_change_redirect'):
         kwargs['post_change_redirect'] = reverse('current_user_detail') 
@@ -151,7 +185,7 @@ def password_reset_confirm(request, **kwargs):
     """
     Wraps the standart password reset view provided by ``contrib.auth`` ,
     redirecting to the login page with a user message when done instead
-    of showing an intermediary page that is sometimes useless.
+    of showing an intermediary page.
     """
     if not kwargs.get('post_reset_redirect'):
         kwargs['post_reset_redirect'] = reverse('login') 

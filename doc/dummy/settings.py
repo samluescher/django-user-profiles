@@ -1,5 +1,7 @@
 # Django settings for dummy project.
 
+IS_SPHINX_BUILD_DUMMY = True
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -143,3 +145,5 @@ LOGGING = {
         },
     }
 }
+
+AUTH_PROFILE_MODULE = 'dummy.Profile'

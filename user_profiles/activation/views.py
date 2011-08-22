@@ -1,3 +1,9 @@
+"""
+The views provided by the ``activation`` module will be available in your
+project if you included the URLconf as explained in the installation
+instructions. 
+"""
+
 from user_profiles.activation.models import ActivationCode
 from user_profiles.activation.utils import require_activation_from_user, accept_activation_code
 from user_profiles.activation.signals import post_activation
@@ -16,6 +22,15 @@ class ActivationForm(forms.Form):
     key = forms.CharField(label=_('Activation code'), required=True)
 
 def activate(request, key=None):
+    """
+    Tries to activate a user account with the key passed, and redirects users to
+    their profile page on success.
+    
+    If no key or an invalid key was passed, the activation form will be
+    rendered. Usually, users won't see that form since they are going to click
+    the activation link in their email. However, as a backup they can also enter
+    the key manually using this form.
+    """
     if request.method == 'POST':
         form = ActivationForm(request.POST)
         key = request.POST.get('key', None)
@@ -49,14 +64,24 @@ def activate(request, key=None):
     return render_to_response('activation/form.html', {'form': form}, context_instance=RequestContext(request))
 
 @login_required
-def current_user_send(request):
+def send_activation_code_to_user(request, user=None):
+    """
+    Sends an activation code to the user passed (or the current user, if
+    omitted). If no activation code exists for this user, there will be one
+    created. You can use this view if users need to be able to re-request their
+    activation code, for instance when a previous email did not arrive.
+    """
+    if not user:
+        user = request.user
     try:
-        activation_code = ActivationCode.objects.filter(user=request.user, activated=False)[0]
+        # Use existing activation code
+        activation_code = ActivationCode.objects.filter(user=user, activated=False)[0]
     except IndexError:
+        # If none exists, require_activation_from_user will create one
         activation_code = None
-    require_activation_from_user(request.user, activation_code)
+    require_activation_from_user(user, activation_code)
     success_message = _('An activation code has been sent to your email address: %(email)s. Please click the link in the email in order to activate.') % {
-        'email': request.user.email
+        'email': user.email
     }
     messages.success(request, success_message)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', settings.LOGIN_REDIRECT_URL))

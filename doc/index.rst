@@ -6,8 +6,8 @@ Introduction
 
 django-user-profiles is a flexible app that wires together Django's user
 authentication and user profile features, with customizable forms and models.
-Furthermore, it provides a layer for user profile activation, plus support for a
-multiple-profiles-per-user feature.
+Furthermore, it provides a module for user profile activation, plus basic
+support for a multiple-profiles-per-user feature.
 
 
 Table of Contents
@@ -18,13 +18,14 @@ Table of Contents
 
    overview
    installation
-   models
-   views
    configuration
+   models
+   managers
+   views
    activation
    multiple-profiles
    forms
-   templatetags
+   signals
    other
    
    
