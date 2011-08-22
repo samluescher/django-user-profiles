@@ -13,3 +13,4 @@ build/**/*
 *.pyc
 
 django-user-profiles.komodoproject
+django_user_profiles.egg-info

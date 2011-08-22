@@ -1,0 +1,10 @@
+include AUTHORS
+include LICENSE
+include README.md
+include CHANGELOG.txt
+recursive-include user_profiles/activation/locale *
+recursive-include user_profiles/activation/templates *
+recursive-include user_profiles/locale *
+recursive-include user_profiles/templates *
+recursive-include docs *
+recursive-exclude * *.pyc
