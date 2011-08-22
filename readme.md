@@ -13,7 +13,7 @@ Given the appropriate configuration, you can implement various login/signup
 paradigms:
 
 * Sign up with username and email – confirm email address – proceed to log in
-  with generated password *NOT IMPLEMENTED*
+  with generated password (*not implemented*)
 * Sign up with email and password – confirm email address – proceed to log in
 * Sign up with email and password – proceed to log in – confirm email address
   later to use advanced features

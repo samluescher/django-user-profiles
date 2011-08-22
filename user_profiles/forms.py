@@ -75,8 +75,8 @@ class SignupForm(UserCreationForm):
 # TODO not working -- maybe inheritance is not the way to do it
 class SignupWithProfileForm(SignupForm, ProfileForm):
     """
-    NOT IMPLEMENTED. Signup form requiring users to fill in their full profile
-    during signup.
+    (*not implemented*) Signup form requiring users to fill in their full
+    profile during signup.
     """
 
     class Meta:
